@@ -8,7 +8,7 @@ class Api::ProductsController < ApplicationController
     @product = Product.new(
                            name: params[:name],
                            price: params[:price],
-                           description: params[:description],
+                           text: params[:text],
                            image_url: params[:image_url]
                           )
     @product.save
