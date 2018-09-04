@@ -6,11 +6,11 @@ class Api::ProductsController < ApplicationController
 
   def create
     @product = Product.new(
-                         name: params[:title],
-                         price: params[:chef],
-                         image_url: params[:image_url],
-                         description: params[:prep_time]
-                        )
+                           name: params[:name],
+                           price: params[:price],
+                           description: params[:description],
+                           image_url: params[:image_url]
+                          )
     @product.save
     render 'show.json.jbuilder'
   end
@@ -25,21 +25,19 @@ class Api::ProductsController < ApplicationController
 
     @product.name = params[:name] || @product.name
     @product.price = params[:price] || @product.price
-    @product.image_url = params[:image_url] || @product.image_url
     @product.description = params[:description] || @product.description
+    @product.image_url = params[:image_url] || @product.image_url
 
+    @product.save
     render 'show.json.jbuilder'
   end
 
   def destroy
     @product = Product.find(params[:id])
     @product.destroy
-    render json: {message: "Recipe successfully destroyed"}
+    render json: {message: "Product successfully destroyed"}
   end
 end
-
-
-
 
 
 
