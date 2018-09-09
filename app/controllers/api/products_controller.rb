@@ -1,6 +1,23 @@
 class Api::ProductsController < ApplicationController
   def index
     @products = Product.all
+
+    search_term = params[:search]
+    if search_term
+      @products = @products.where(
+                                  "name iLike ?", "%#{search_term}%"
+                                  )
+    end
+
+    sort_attribute = params[:sort]
+    asc_or_desc = params[:asc_or_desc]
+
+    if sort_attribute && asc_or_desc
+      @products = @products.order(sort_attribute => asc_or_desc)
+    elsif sort_attribute
+      @products = @products.order(sort_attribute)
+    end
+
     render 'index.json.jbuilder'
   end
 
@@ -9,7 +26,6 @@ class Api::ProductsController < ApplicationController
                            name: params[:name],
                            price: params[:price],
                            text: params[:text],
-                           image_url: params[:image_url]
                           )
     if @product.save
       render 'show.json.jbuilder'
