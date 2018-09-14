@@ -20,3 +20,5 @@ end
 json.image_url do
   json.array! product.images, partial: 'api/images/image', as: :images
 end
+
+json.current_user current_user
