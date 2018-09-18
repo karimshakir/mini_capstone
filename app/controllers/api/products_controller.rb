@@ -1,19 +1,18 @@
 class Api::ProductsController < ApplicationController
+
   def index
+    search_term = params[:search]
+    sort_attribute = params[:sort]
+    sort_order = params[:sort_order]
+
     @products = Product.all
 
-    search_term = params[:search]
     if search_term
-      @products = @products.where(
-                                  "name iLike ?", "%#{search_term}%"
-                                  )
+      @products = @products.where("name iLIKE ?", "%#{search_term}%")
     end
 
-    sort_attribute = params[:sort]
-    asc_or_desc = params[:asc_or_desc]
-
-    if sort_attribute && asc_or_desc
-      @products = @products.order(sort_attribute => asc_or_desc)
+    if sort_order && sort_attribute
+      @products = @products.order(sort_attribute => sort_order)
     elsif sort_attribute
       @products = @products.order(sort_attribute)
     end
@@ -25,14 +24,13 @@ class Api::ProductsController < ApplicationController
     @product = Product.new(
                            name: params[:name],
                            price: params[:price],
-                           text: params[:text],
+                           description: params[:description]
                           )
     if @product.save
       render 'show.json.jbuilder'
     else
-      render json: { errors: @product.errors.full_messages }, status: :unprocessable_entity
+      render json: {errors: @product.errors.full_messages}, status: :unprocessable_entity
     end
-
   end
 
   def show
@@ -46,12 +44,11 @@ class Api::ProductsController < ApplicationController
     @product.name = params[:name] || @product.name
     @product.price = params[:price] || @product.price
     @product.description = params[:description] || @product.description
-    @product.image_url = params[:image_url] || @product.image_url
 
     if @product.save
       render 'show.json.jbuilder'
     else
-      render json: { errors: @product.errors.full_messages }, status: :unprocessable_entity
+      render json: {errors: @product.errors.full_messages }, status: :unprocessable_entity
     end
   end
 

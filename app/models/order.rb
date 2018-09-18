@@ -1,6 +1,7 @@
 class Order < ApplicationRecord
-  belongs_to :user
-  belongs_to :product
+  belongs_to :users
+  has_many :carted_products
+  has_many :products, through: :carted_products
 
 
   def calculate_subtotal
@@ -11,15 +12,14 @@ class Order < ApplicationRecord
      self.tax = subtotal * 0.09
   end
 
-  def calculate_tax
+  def calculate_total
      self.total = subtotal + tax
   end
 
   def build_totals
-
-    @order.calculate_subtotal
-    @order.calculate_total
-    @order.calculate_tax
+    calculate_subtotal
+    calculate_tax
+    calculate_total
 
   end
 
